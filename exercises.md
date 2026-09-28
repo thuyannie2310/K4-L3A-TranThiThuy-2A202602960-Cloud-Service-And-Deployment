@@ -3,11 +3,11 @@
 > **Bài làm cá nhân.** Trả lời bằng lời của chính bạn, dựa trên những gì bạn
 > quan sát được khi chạy code — không sao chép đáp án của người khác.
 >
-> Cách trả lời: thay dòng `> *Câu trả lời của bạn*` bằng câu trả lời.
+> Nội dung được tổng hợp từ mã nguồn, kết quả kiểm thử và thí nghiệm thực tế.
 > `grade.py` đếm số câu đã trả lời (15 điểm cho 10 câu).
 >
 > Họ và tên: Trần Thị Thúy — Mã học viên: 2A202602960
-> Bản giải thích tham khảo kèm bằng chứng do trợ lý chạy; học viên cần đọc, kiểm chứng và diễn đạt lại theo hiểu biết của mình. Các thí nghiệm Docker/cloud chưa thực hiện được ghi rõ.
+> Nội dung có trợ lý AI hỗ trợ tổng hợp. Log CP1 lấy từ smoke test do trợ lý chạy; số đo Docker, cache và scale lấy từ ảnh thí nghiệm học viên gửi trên máy Windows. Học viên cần đọc, kiểm chứng và giải thích được nội dung. Câu 10 dựa trên Deploy Logs Railway và kiểm tra HTTP sau khi sửa.
 
 ---
 
@@ -44,17 +44,19 @@ Build cả hai phiên bản và ghi lại số đo thật:
 ```bash
 docker build -f Dockerfile.single -t agent:single .
 docker build -t agent:multi .
-docker images | grep agent
+docker images agent
 ```
 
 | Bản | Dung lượng |
 |-----|-----------|
-| 1 stage (bản đầu) | Chưa đo — chưa có Docker |
-| Multi-stage | Chưa đo — chưa có Docker |
+| 1 stage (bản đầu) | 1,73 GB (Disk usage) |
+| Multi-stage | 309 MB (Disk usage) |
 
 Giải thích: phần dung lượng chênh lệch đó là những gì?
 
-> *Câu trả lời của bạn*
+Theo ảnh kết quả `docker images agent`, bản một stage chiếm 1,73 GB và bản multi-stage chiếm 309 MB ở cùng cột Disk usage, giảm khoảng 82%. Cột Content size tương ứng là 447 MB và 71,9 MB; không trộn hai loại số đo khi so sánh.
+
+Bản mới dùng `python:3.11-slim` thay cho bản Python đầy đủ nên giảm các công cụ và thư viện hệ điều hành không cần cho runtime. Runtime chỉ nhận venv từ builder cùng thư mục app và utils; bản cũ dùng COPY . . và giữ cache pip mặc định. Vì base image, phạm vi sao chép và cách cài thư viện cùng thay đổi, không thể quy toàn bộ mức giảm cho multi-stage hoặc khẳng định riêng compiler chiếm bao nhiêu nếu chưa đo từng layer.
 
 ---
 
@@ -64,9 +66,12 @@ Sửa một ký tự trong `app/main.py` rồi build lại. Với Dockerfile c�
 layer nào được dùng lại từ cache, layer nào phải chạy lại? Nếu bạn đặt
 `COPY . .` lên trước `RUN pip install` thì kết quả khác thế nào?
 
-Theo thứ tự Dockerfile hiện tại: sửa app/main.py chỉ làm mất cache từ COPY app và các bước phụ thuộc phía sau; COPY requirements.txt, tạo venv và pip install ở builder được tái sử dụng nếu requirements/base không đổi. Đặt COPY . . trước pip install khiến sửa source cũng làm bước cài thư viện chạy lại. Đây là phân tích Dockerfile; chưa xác minh cache bằng build thật vì máy chưa có Docker.
+Sau khi thêm comment vào `app/main.py`, lưu file và chạy lại `docker build --progress=plain -t agent:multi .`, log cho thấy:
 
-> *Câu trả lời của bạn*
+- Các bước COPY requirements.txt, tạo venv, pip install, tạo user, WORKDIR và COPY venv từ builder đều có trạng thái CACHED.
+- Bước COPY app có trạng thái DONE 0.0s; bước COPY utils phía sau cũng DONE 0.0s, rồi Docker xuất image thành công.
+
+Như vậy, thay đổi source không làm cài lại thư viện. Nếu đặt COPY . . trước RUN pip install trong cùng stage, thay đổi source sẽ làm mất cache của COPY và bước cài thư viện phụ thuộc phía sau, nên pip install phải chạy lại. Tùy cache tải gói, không nhất thiết mọi gói đều phải tải lại từ mạng.
 
 ---
 
@@ -115,9 +120,21 @@ Chạy `docker compose up --scale agent=3` rồi gọi `/ask` nhiều lần vớ
 `X-User-Id`. Quan sát `history_length` trong response. Nếu lịch sử được lưu
 trong một dict Python thay vì Redis, bạn sẽ thấy con số đó thay đổi thế nào?
 
-Smoke test ASGI + FakeRedis ghi nhận history_length: 0, 2, 4, 6, 8, 10, 12, 14, 16, 18. Test CP4 cũng kiểm tra hai đối tượng store dùng cùng Redis nhìn thấy cùng history. Đây chưa phải thí nghiệm 3 container. Nếu dùng dict riêng, các request qua A/B/C sẽ thấy các chuỗi lịch sử riêng, ví dụ 0, 0, 0, 2, 2, 2; số đếm có thể giảm khi chuyển sang instance ít history hơn. Đã thêm docker-compose.scale.yml để tránh trùng cổng khi chạy thí nghiệm thật.
+Đã chạy stack bằng hai file Compose để tránh ba agent cùng chiếm cổng host 8000:
 
-> *Câu trả lời của bạn*
+```bash
+docker compose -f docker-compose.yml -f docker-compose.scale.yml up -d --build --scale agent=3
+```
+
+Kết quả compose ps cho thấy 3 agent healthy, Redis healthy và Nginx đang chạy ở cổng 8000. Gửi liên tiếp 5 request qua Nginx với cùng một X-User-Id mới thu được:
+
+```text
+[(200, 0), (200, 2), (200, 4), (200, 6), (200, 8)]
+```
+
+Mỗi cặp là (HTTP status, history_length). History tăng 2 sau mỗi lượt vì lưu cả câu hỏi của user và câu trả lời của assistant; response báo số message trước lượt hiện tại. Ảnh minh chứng: [scale-history.png](screenshots/scale-history.png).
+
+Redis là nơi lưu lịch sử dùng chung giữa các instance. Kết quả trên xác nhận chuỗi hội thoại liên tục qua Nginx trong stack 3 agent; response không có instance ID nên riêng ảnh này không chứng minh từng request đã vào container nào. Nếu thay Redis bằng dict riêng và request được phân phối sang các instance khác nhau, mỗi instance sẽ có lịch sử riêng: có thể thấy 0, 0, 0, 2, 2, 2 hoặc số đếm giảm khi đổi instance. Khi process restart, dict cũng mất dữ liệu.
 
 ---
 
@@ -127,4 +144,15 @@ Ghi lại **một** lỗi bạn gặp khi deploy lên cloud (build fail, health 
 timeout, sai REDIS_URL, app không đọc `$PORT`...): thông báo lỗi là gì, bạn
 tìm ra nguyên nhân bằng cách nào, và sửa ra sao?
 
-> *Câu trả lời của bạn*
+Lần deploy đầu lên Railway, image build xong nhưng app chuyển sang Crashed. Trong Deploy Logs có thông báo:
+
+```text
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings
+agent_api_key
+Field required [type=missing, input_value={'port': '8080'}, input_type=dict]
+ERROR: Application startup failed. Exiting.
+```
+
+Traceback đi qua lifespan → get_settings() → Settings(), cho thấy lỗi xảy ra khi đọc cấu hình lúc startup. Kiểm tra tab Variables thấy app chưa có AGENT_API_KEY. File .env trên máy local không được commit hay đưa vào image, nên Railway không tự có khóa đó.
+
+Cách sửa: nhập AGENT_API_KEY trong Railway Variables, đặt REDIS_URL tham chiếu Redis trong cùng project, rồi deploy lại. Sau khi sửa, app và Redis đều Online; kiểm tra URL HTTPS công khai nhận /health 200, /ready 200 với redis=true, và /ask không có key trả 401. Đây là ví dụ fail-fast giúp phát hiện thiếu secret trước khi app nhận request.

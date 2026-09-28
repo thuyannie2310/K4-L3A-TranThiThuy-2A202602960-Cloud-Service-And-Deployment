@@ -1,101 +1,69 @@
-# Thông Tin Deploy — Checkpoint 5
+# Thông tin deploy — Checkpoint 5
 
-> Điền file này sau khi deploy xong. `pytest tests/test_cp5.py` đọc file này
-> để tìm địa chỉ service của bạn và gọi thử.
->
-> **Chỉ ghi TÊN biến môi trường, tuyệt đối không dán giá trị API key vào đây.**
-> Repo này công khai — dán khóa vào là mất khóa.
+## Thông tin học viên
 
-## Thông Tin Học Viên
-
-| Mục | Nội dung |
-|-----|----------|
-| Họ và tên | (điền họ tên) |
-| Mã học viên | (điền mã học viên) |
-| Repo | (điền link repo K4-L3A-DAY12-HoVaTen-MSSV-CloudServicesAndDeployment) |
+- Họ và tên: Trần Thị Thúy
+- Mã học viên: 2A202602960
+- Repo: https://github.com/thuyannie2310/K4-L3A-TranThiThuy-2A202602960-Cloud-Service-And-Deployment
 
 ## Service
 
-| Mục | Nội dung |
-|-----|----------|
-| Public URL | https://TODO-thay-bang-url-that.up.railway.app |
-| Platform | Railway / Render / Cloud Run — (điền platform bạn dùng) |
-| Ngày deploy | (điền ngày) |
+- Public URL: https://k4-l3a-tranthithuy-2a202602960-cloud-service-and-production.up.railway.app
+- Platform: Railway
+- Ngày deploy: 2026-09-28
+- Project: supportive-tranquility
+- Build: Dockerfile; cổng HTTP: 8080; healthcheck: /health.
+- App và Redis hiển thị Online trên dashboard.
 
-## Biến Môi Trường Đã Set Trên Cloud
+## Cấu hình môi trường
 
-Ghi tên biến và **nguồn giá trị**, không ghi giá trị:
+| Biến | Nguồn |
+|---|---|
+| AGENT_API_KEY | Học viên nhập riêng trong Railway Variables; không ghi giá trị vào repo |
+| REDIS_URL | Tham chiếu biến REDIS_URL của service Redis trong cùng project |
+| PORT | Railway tự cấp, quan sát thấy 8080 |
+| RATE_LIMIT_PER_MINUTE | Mặc định của Settings: 10 |
+| MONTHLY_BUDGET_USD | Mặc định của Settings: 10.0 |
+| LOG_LEVEL | Mặc định của Settings: INFO |
 
-| Biến | Đã set | Ghi chú |
-|------|--------|---------|
-| `PORT` | ✅ | platform tự gán |
-| `AGENT_API_KEY` | ✅ | đặt trong dashboard, không nằm trong repo |
-| `REDIS_URL` | ✅ | (điền: Redis add-on của platform / Upstash / ...) |
-| `RATE_LIMIT_PER_MINUTE` | ✅ | 10 |
-| `MONTHLY_BUDGET_USD` | ✅ | 10.0 |
-| `LOG_LEVEL` | ✅ | INFO |
+## Kết quả kiểm tra HTTP thực tế
 
-## Lệnh Kiểm Tra
+Kiểm tra từ máy trợ lý bằng httpx, xác minh TLS bật mặc định:
 
-Thay `<URL>` bằng Public URL ở trên:
+```text
+GET /health → 200
+{"status":"ok","service":"day12-agent","version":"1.0.0"}
 
-```bash
-# 1. Liveness — mong đợi 200 {"status":"ok"}
-curl -i <URL>/health
+GET /ready → 200
+{"status":"ready","redis":true}
 
-# 2. Readiness — mong đợi 200 {"status":"ready"} (đã nối được Redis)
-curl -i <URL>/ready
-
-# 3. Không có API key — mong đợi 401
-curl -i -X POST <URL>/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question":"Hello"}'
-
-# 4. Có API key — mong đợi 200 kèm câu trả lời
-curl -i -X POST <URL>/ask \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: $AGENT_API_KEY" \
-  -H "X-User-Id: sv-test" \
-  -d '{"question":"Deploy là gì?"}'
-
-# 5. Rate limit — gọi 15 lần, những lần cuối phải trả 429
-for i in $(seq 1 15); do
-  curl -s -o /dev/null -w "%{http_code} " -X POST <URL>/ask \
-    -H "Content-Type: application/json" \
-    -H "X-API-Key: $AGENT_API_KEY" \
-    -H "X-User-Id: sv-test" \
-    -d '{"question":"test"}'
-done; echo
+POST /ask, body {"question":"Hello"}, không gửi API key → 401
+{"detail":"invalid or missing API key"}
 ```
 
-## Kết Quả Chạy Thật
+Kiểm tra từ container Docker trên máy Windows, gửi API key bằng header (không in khóa):
 
-Dán output của các lệnh trên vào đây:
+```text
+POST /ask với key thật, user cloud-check → 200
+history_length: 0; cost_usd: 0.00002505; tokens: in=3, out=41
+Response có answer hợp lệ.
 
+15 request với cùng user mới →
+[200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429, 429]
 ```
-(điền output)
-```
 
-## Ảnh Chụp Màn Hình
+Output rate limit được lưu ở artifacts/cloud-rate-limit.txt trên máy Windows.
 
-Đặt ảnh trong thư mục `screenshots/`:
+## Lỗi đã xử lý
 
-- `screenshots/dashboard.png` — trang quản lý service trên platform
-- `screenshots/health.png` — kết quả gọi `/health` từ trình duyệt hoặc curl
+Lần khởi động đầu, Deploy Logs báo `ValidationError: 1 validation error for Settings`, `agent_api_key`, `Field required`, rồi `Application startup failed. Exiting.` App thiếu AGENT_API_KEY vì .env local không được đưa lên cloud. Đã đặt khóa trong Railway Variables, thêm tham chiếu Redis và deploy lại. App khởi động thành công, /health và /ready trả 200.
 
----
+Khi kết nối GitHub ban đầu, Railway App bị yêu cầu cài vào tổ chức lớp không có quyền quản trị. Đã chọn tài khoản cá nhân thuyannie2310 và chỉ cấp quyền repo bài lab.
 
-## Nếu Dùng Phương Án Dự Phòng
+## Bằng chứng còn cần lưu
 
-Không đăng ký được tài khoản cloud? Vẫn nộp được bài, nhưng CP5 tối đa 60% điểm:
+- screenshots/dashboard.png: dashboard Railway có app và Redis Online.
+- screenshots/health.png: trang /health của URL cloud (ảnh local cũ nên giữ tên riêng).
+- screenshots/scale-history.png: đã lưu thí nghiệm Docker local 3 agent.
 
-1. Đặt `LOCAL_FALLBACK=true` trong `.env`
-2. Chạy `docker compose up -d` rồi kiểm tra `docker compose ps`
-3. Chụp màn hình vào `screenshots/`
-4. Chạy `pytest tests/test_cp5.py -v` — bộ test sẽ tự chuyển sang kiểm tra
-   `http://localhost:8000`
-5. Ghi rõ lý do không deploy được vào phần dưới đây:
-
-```
-(điền lý do nếu dùng phương án dự phòng, ngược lại xóa mục này)
-```
+Không dùng LOCAL_FALLBACK cho bản deploy này.
