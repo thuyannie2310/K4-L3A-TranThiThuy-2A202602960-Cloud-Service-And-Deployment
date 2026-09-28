@@ -2,7 +2,16 @@
 
 Học viên: Trần Thị Thúy — 2A202602960 (theo tên repository).
 
-## Đã kiểm chứng trên máy hiện tại
+## Kết quả cuối ngày 2026-09-28
+
+- Chạy `grade.py --no-bonus` trong container trên máy Windows: **100.0/100** phần bắt buộc. Output: `artifacts/grade-windows.txt`.
+- CP5: 9 passed, 4 skipped; đã kiểm tra cloud bằng API key thật, không dùng LOCAL_FALLBACK.
+- CP2 bỏ qua 2 test cần Docker CLI bên trong container; build image và chạy stack Docker thật đã được quan sát riêng trên host Windows.
+- Railway: /health và /ready trả 200; /ask có key trả 200, thiếu key trả 401; rate limit trả 10 lượt 200 rồi 5 lượt 429.
+- Docker local: 3 agent healthy cùng Redis và nginx; lịch sử 0,2,4,6,8.
+- Đây là điểm tự chấm; câu trả lời và bằng chứng vẫn do giảng viên đánh giá.
+
+## Kiểm chứng trước đó trên máy macOS
 
 - CP1–CP4: 68 passed, 2 skipped (thiếu Docker).
 - Kiểm tra bổ sung: 4 passed, bao gồm request đồng thời, ranh giới 60 giây, hết ngân sách và fail-fast lúc startup.
@@ -40,16 +49,13 @@ docker compose -f docker-compose.yml -f docker-compose.scale.yml up -d --build -
 
 Nginx giữ cổng 8000; các agent chỉ dùng cổng nội bộ. Override cần Compose 2.24.4+ ([tài liệu Docker](https://docs.docker.com/reference/compose-file/merge/)). Gọi /ask cùng X-User-Id và lưu kết quả cho câu 9. Lịch sử tối đa 20 message.
 
-## Phần còn cần thực hiện
+## Hoàn tất hồ sơ nộp bài
 
-1. Chạy Docker build, đo image và kiểm tra scale thật.
-2. Deploy bằng cấu hình Railway hoặc Render trong repo với Redis thật; cấu hình đã có nhưng chưa được kiểm chứng trên tài khoản cloud.
-3. Điền Public URL, output thực tế, platform trong DEPLOYMENT.md; chụp dashboard và /health.
-4. Hoàn thiện câu 3, 4, 9, 10 từ quan sát thực tế; đọc và diễn đạt lại các câu giải thích theo hiểu biết cá nhân.
-5. Đổi tên repo GitHub đúng mẫu có DAY12 và CloudServicesAndDeployment; kiểm tra lại MSSV.
-6. Chạy `python grade.py --no-bonus`, commit/push rồi nộp repo public lên Codelab.
-
-Chưa cấu hình bonus CI/CD vì CP5 chưa hoàn thành. Không đặt LOCAL_FALLBACK để giả lập đạt CP5 khi chưa có stack Docker thật.
+- Đã điền đủ 10 câu trong exercises.md từ code và quan sát thực tế.
+- Đã điền URL, cấu hình, kết quả và lỗi triển khai trong DEPLOYMENT.md.
+- Còn bổ sung ảnh dashboard Railway và /health cloud vào screenshots/.
+- Kiểm tra tên repo theo mẫu có DAY12 và CloudServicesAndDeployment, MSSV, rồi nộp liên kết repo lên Codelab.
+- Bonus CI/CD chưa thực hiện; lần chấm dùng --no-bonus.
 
 ## Giới hạn của thiết kế lab
 

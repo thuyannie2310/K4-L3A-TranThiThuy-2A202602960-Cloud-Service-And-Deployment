@@ -52,7 +52,9 @@ Response có answer hợp lệ.
 [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429, 429]
 ```
 
-Output rate limit được lưu ở artifacts/cloud-rate-limit.txt trên máy Windows.
+Output rate limit gốc trên Windows: `artifacts/cloud-rate-limit-windows.txt`; bản văn bản tương ứng: `artifacts/cloud-rate-limit.txt`.
+
+Chạy `grade.py --no-bonus` trong container Windows: 100.0/100 phần bắt buộc; riêng CP5: 9 passed, 4 skipped. API key cloud được lấy từ môi trường, không in vào output. Kết quả: `artifacts/grade-windows.txt`.
 
 ## Lỗi đã xử lý
 
