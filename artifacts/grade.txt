@@ -1,0 +1,59 @@
+==========================================================================
+CHẤM ĐIỂM TỰ ĐỘNG — K4 LEVEL 3A, NGÀY 12: HẠ TẦNG CLOUD & DEPLOYMENT
+==========================================================================
+
+>>> CP1 — 12-Factor Config, Health & Logging
+.............                                                            [100%]
+=============================== warnings summary ===============================
+tests/test_cp1.py::TestHealthEndpoint::test_health_tra_ve_200
+  /Users/annie/code/K4-Day12/K4-L3A-TranThiThuy-2A202602960-Cloud-Service-And-Deployment/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+13 passed, 1 warning in 0.20s
+
+>>> CP2 — Docker: multi-stage, bảo mật image
+..............ss                                                         [100%]
+14 passed, 2 skipped in 0.02s
+
+>>> CP3 — API Security: auth, rate limit, cost guard
+......................                                                   [100%]
+22 passed in 0.05s
+
+>>> CP4 — Scaling & Reliability: stateless, probe, shutdown
+...................                                                      [100%]
+19 passed in 0.02s
+
+>>> CP5 — Cloud Deployment: service chạy thật
+FFFFEEEEsssss                                                            [100%]
+=========================== short test summary info ============================
+FAILED tests/test_cp5.py::TestDeploymentDoc::test_da_dien_thong_tin_ca_nhan
+FAILED tests/test_cp5.py::TestDeploymentDoc::test_ghi_ro_platform - Assertion...
+FAILED tests/test_cp5.py::TestDeploymentDoc::test_liet_ke_bien_moi_truong - A...
+FAILED tests/test_cp5.py::TestDeploymentDoc::test_khong_lo_secret_trong_tai_lieu
+ERROR tests/test_cp5.py::TestPublicDeployment::test_url_dung_https - Failed: ...
+ERROR tests/test_cp5.py::TestPublicDeployment::test_health_tra_ve_200 - Faile...
+ERROR tests/test_cp5.py::TestPublicDeployment::test_ready_tra_ve_200 - Failed...
+ERROR tests/test_cp5.py::TestPublicDeployment::test_ask_yeu_cau_xac_thuc - Fa...
+4 failed, 5 skipped, 4 errors in 0.01s
+
+==========================================================================
+BẢNG ĐIỂM
+==========================================================================
+  CP1 — 12-Factor Config, Health & Logging         13/13 test            15.0/15
+  CP2 — Docker: multi-stage, bảo mật image         14/14 test (2 bỏ qua)  15.0/15
+  CP3 — API Security: auth, rate limit, cost guard 22/22 test            20.0/20
+  CP4 — Scaling & Reliability: stateless, probe, shutdown 19/19 test            20.0/20
+  CP5 — Cloud Deployment: service chạy thật        0/8 test (5 bỏ qua)    0.0/15
+  Exercises — câu hỏi phản ánh                     5/10 câu               7.5/15
+--------------------------------------------------------------------------
+  Điểm phần bắt buộc                                                     77.5/100
+  BONUS — CI/CD với GitHub Actions                 bỏ qua (--no-bonus)    +0.0/10
+--------------------------------------------------------------------------
+  TỔNG CUỐI (trần 100)                                                   77.5/100
+==========================================================================
+
+  Đạt yêu cầu. Xem lại các test còn rớt để hoàn thiện nốt.
+
+Ghi chú: điểm exercises là điểm hoàn thành — chất lượng nội dung
+sẽ được giảng viên chấm lại thủ công.

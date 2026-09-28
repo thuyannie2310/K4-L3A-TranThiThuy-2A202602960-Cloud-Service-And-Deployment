@@ -1,0 +1,20 @@
+/Users/annie/code/K4-Day12/K4-L3A-TranThiThuy-2A202602960-Cloud-Service-And-Deployment/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+{"service": "day12-agent", "version": "1.0.0", "event": "service_started", "level": "info", "timestamp": "2026-09-28T07:34:17.703835+00:00"}
+/health 200 {"status": "ok", "service": "day12-agent", "version": "1.0.0"}
+/ready 200 {"status": "ready", "redis": true}
+Missing API key: 401
+{"user_id": "smoke-user", "tokens_in": 3, "tokens_out": 37, "cost_usd": 2.265e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:17.710854+00:00"}
+{"user_id": "smoke-user", "tokens_in": 43, "tokens_out": 47, "cost_usd": 3.465e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:17.712592+00:00"}
+{"user_id": "smoke-user", "tokens_in": 94, "tokens_out": 47, "cost_usd": 4.23e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:17.714007+00:00"}
+{"user_id": "smoke-user", "tokens_in": 145, "tokens_out": 47, "cost_usd": 4.995e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:17.715504+00:00"}
+{"user_id": "smoke-user", "tokens_in": 195, "tokens_out": 47, "cost_usd": 5.745e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:17.716971+00:00"}
+{"user_id": "smoke-user", "tokens_in": 246, "tokens_out": 47, "cost_usd": 6.51e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:17.718294+00:00"}
+{"user_id": "smoke-user", "tokens_in": 297, "tokens_out": 47, "cost_usd": 7.275e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:17.719562+00:00"}
+{"user_id": "smoke-user", "tokens_in": 348, "tokens_out": 47, "cost_usd": 8.04e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:17.720858+00:00"}
+{"user_id": "smoke-user", "tokens_in": 399, "tokens_out": 47, "cost_usd": 8.805e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:17.722374+00:00"}
+{"user_id": "smoke-user", "tokens_in": 450, "tokens_out": 47, "cost_usd": 9.57e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:17.724134+00:00"}
+15 requests: [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429, 429]
+History lengths: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+Over budget: 402
+{"service": "day12-agent", "event": "service_stopped", "level": "info", "timestamp": "2026-09-28T07:34:17.730212+00:00"}

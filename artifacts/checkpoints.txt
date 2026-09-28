@@ -1,0 +1,116 @@
+...........................ss.........................................   [100%]
+=============================== warnings summary ===============================
+tests/test_cp1.py::TestHealthEndpoint::test_health_tra_ve_200
+  /Users/annie/code/K4-Day12/K4-L3A-TranThiThuy-2A202602960-Cloud-Service-And-Deployment/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+___________ TestStructuredLogging.test_log_event_tra_ve_json_hop_le ____________
+----------------------------- Captured stdout call -----------------------------
+{"event": "test_event", "level": "info", "timestamp": "2026-09-28T07:34:04.140900+00:00"}
+__________ TestStructuredLogging.test_log_event_gan_them_truong_tuy_y __________
+----------------------------- Captured stdout call -----------------------------
+{"user_id": "sv01", "cost_usd": 0.12, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:04.141230+00:00"}
+______________ TestStructuredLogging.test_level_luon_viet_thuong _______________
+----------------------------- Captured stdout call -----------------------------
+{"event": "e", "level": "error", "timestamp": "2026-09-28T07:34:04.141433+00:00"}
+___________ TestStructuredLogging.test_timestamp_dung_dinh_dang_iso ____________
+----------------------------- Captured stdout call -----------------------------
+{"event": "e", "level": "info", "timestamp": "2026-09-28T07:34:04.141857+00:00"}
+___________________ TestAuthentication.test_dung_key_thi_200 ___________________
+----------------------------- Captured stdout call -----------------------------
+{"user_id": "sv-test", "tokens_in": 3, "tokens_out": 37, "cost_usd": 2.265e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:04.558381+00:00"}
+_________________ TestAuthentication.test_tra_ve_dung_user_id __________________
+----------------------------- Captured stdout call -----------------------------
+{"user_id": "sv-123", "tokens_in": 1, "tokens_out": 34, "cost_usd": 2.055e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:04.560881+00:00"}
+________ TestAuthentication.test_khong_gui_user_id_thi_thanh_anonymous _________
+----------------------------- Captured stdout call -----------------------------
+{"user_id": "anonymous", "tokens_in": 1, "tokens_out": 34, "cost_usd": 2.055e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:04.563292+00:00"}
+__________________ TestRateLimiter.test_qua_http_thi_tra_429 ___________________
+----------------------------- Captured stdout call -----------------------------
+{"user_id": "sv-test", "tokens_in": 1, "tokens_out": 34, "cost_usd": 2.055e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:04.572345+00:00"}
+{"user_id": "sv-test", "tokens_in": 34, "tokens_out": 44, "cost_usd": 3.15e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:04.574256+00:00"}
+{"user_id": "sv-test", "tokens_in": 79, "tokens_out": 44, "cost_usd": 3.825e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:04.575883+00:00"}
+___________________ TestCostGuard.test_ask_ghi_nhan_chi_phi ____________________
+----------------------------- Captured stdout call -----------------------------
+{"user_id": "sv-test", "tokens_in": 4, "tokens_out": 36, "cost_usd": 2.22e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:04.590885+00:00"}
+____________________ TestAskResponse.test_tra_du_cac_truong ____________________
+----------------------------- Captured stdout call -----------------------------
+{"user_id": "sv-test", "tokens_in": 4, "tokens_out": 36, "cost_usd": 2.22e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:04.593635+00:00"}
+__________ TestStateless.test_lich_su_duoc_dung_lai_giua_cac_request ___________
+----------------------------- Captured stdout call -----------------------------
+{"user_id": "sv-test", "tokens_in": 4, "tokens_out": 36, "cost_usd": 2.22e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:04.607393+00:00"}
+{"user_id": "sv-test", "tokens_in": 44, "tokens_out": 46, "cost_usd": 3.42e-05, "event": "ask_completed", "level": "info", "timestamp": "2026-09-28T07:34:04.609253+00:00"}
+=========================== short test summary info ============================
+PASSED tests/test_cp1.py::TestConfig::test_settings_co_du_cac_truong
+PASSED tests/test_cp1.py::TestConfig::test_doc_gia_tri_tu_bien_moi_truong
+PASSED tests/test_cp1.py::TestConfig::test_gia_tri_mac_dinh_hop_ly
+PASSED tests/test_cp1.py::TestConfig::test_thieu_api_key_thi_fail_fast
+PASSED tests/test_cp1.py::TestConfig::test_khong_hardcode_secret
+PASSED tests/test_cp1.py::TestStructuredLogging::test_log_event_tra_ve_json_hop_le
+PASSED tests/test_cp1.py::TestStructuredLogging::test_log_event_gan_them_truong_tuy_y
+PASSED tests/test_cp1.py::TestStructuredLogging::test_level_luon_viet_thuong
+PASSED tests/test_cp1.py::TestStructuredLogging::test_log_ra_stdout_dung_mot_dong
+PASSED tests/test_cp1.py::TestStructuredLogging::test_timestamp_dung_dinh_dang_iso
+PASSED tests/test_cp1.py::TestHealthEndpoint::test_health_tra_ve_200
+PASSED tests/test_cp1.py::TestHealthEndpoint::test_health_khong_can_api_key
+PASSED tests/test_cp1.py::TestHealthEndpoint::test_health_khong_phu_thuoc_dependency_nao
+PASSED tests/test_cp2.py::TestDockerfile::test_multi_stage_build
+PASSED tests/test_cp2.py::TestDockerfile::test_base_image_gon_nhe
+PASSED tests/test_cp2.py::TestDockerfile::test_cai_dependency_truoc_khi_copy_source
+PASSED tests/test_cp2.py::TestDockerfile::test_khong_chay_bang_root
+PASSED tests/test_cp2.py::TestDockerfile::test_co_healthcheck
+PASSED tests/test_cp2.py::TestDockerfile::test_khong_hardcode_secret
+PASSED tests/test_cp2.py::TestDockerignore::test_ton_tai_va_day_du
+PASSED tests/test_cp2.py::TestDockerignore::test_khong_loai_tru_nham_file_can_thiet
+PASSED tests/test_cp2.py::TestDockerCompose::test_co_service_agent_va_redis
+PASSED tests/test_cp2.py::TestDockerCompose::test_agent_build_tu_dockerfile
+PASSED tests/test_cp2.py::TestDockerCompose::test_agent_phu_thuoc_redis
+PASSED tests/test_cp2.py::TestDockerCompose::test_agent_tro_dung_toi_redis_service
+PASSED tests/test_cp2.py::TestDockerCompose::test_secret_khong_nam_trong_compose
+PASSED tests/test_cp2.py::TestDockerCompose::test_agent_co_healthcheck
+PASSED tests/test_cp3.py::TestAuthentication::test_khong_co_key_thi_401
+PASSED tests/test_cp3.py::TestAuthentication::test_sai_key_thi_401
+PASSED tests/test_cp3.py::TestAuthentication::test_dung_key_thi_200
+PASSED tests/test_cp3.py::TestAuthentication::test_tra_ve_dung_user_id
+PASSED tests/test_cp3.py::TestAuthentication::test_khong_gui_user_id_thi_thanh_anonymous
+PASSED tests/test_cp3.py::TestAuthentication::test_so_sanh_key_chong_timing_attack
+PASSED tests/test_cp3.py::TestRateLimiter::test_trong_han_muc_thi_cho_qua
+PASSED tests/test_cp3.py::TestRateLimiter::test_vuot_han_muc_thi_429
+PASSED tests/test_cp3.py::TestRateLimiter::test_cua_so_truot_qua_thi_duoc_goi_lai
+PASSED tests/test_cp3.py::TestRateLimiter::test_moi_user_mot_han_muc_rieng
+PASSED tests/test_cp3.py::TestRateLimiter::test_dem_dung_so_request
+PASSED tests/test_cp3.py::TestRateLimiter::test_qua_http_thi_tra_429
+PASSED tests/test_cp3.py::TestRateLimiter::test_401_duoc_kiem_tra_truoc_429
+PASSED tests/test_cp3.py::TestCostGuard::test_chua_tieu_gi_thi_spent_bang_0
+PASSED tests/test_cp3.py::TestCostGuard::test_record_cong_don
+PASSED tests/test_cp3.py::TestCostGuard::test_con_ngan_sach_thi_cho_qua
+PASSED tests/test_cp3.py::TestCostGuard::test_vuot_ngan_sach_thi_402
+PASSED tests/test_cp3.py::TestCostGuard::test_moi_user_mot_ngan_sach_rieng
+PASSED tests/test_cp3.py::TestCostGuard::test_qua_http_thi_tra_402
+PASSED tests/test_cp3.py::TestCostGuard::test_ask_ghi_nhan_chi_phi
+PASSED tests/test_cp3.py::TestAskResponse::test_tra_du_cac_truong
+PASSED tests/test_cp3.py::TestAskResponse::test_cau_hoi_rong_thi_422
+PASSED tests/test_cp4.py::TestConversationStore::test_luu_va_doc_lai_duoc
+PASSED tests/test_cp4.py::TestConversationStore::test_chua_co_gi_thi_tra_list_rong
+PASSED tests/test_cp4.py::TestConversationStore::test_moi_user_mot_lich_su_rieng
+PASSED tests/test_cp4.py::TestConversationStore::test_cat_bot_lich_su_qua_dai
+PASSED tests/test_cp4.py::TestConversationStore::test_co_dat_han_su_dung
+PASSED tests/test_cp4.py::TestConversationStore::test_ping_bao_dung_trang_thai
+PASSED tests/test_cp4.py::TestConversationStore::test_ping_khong_nem_loi_khi_redis_chet
+PASSED tests/test_cp4.py::TestConversationStore::test_fake_url_tra_ve_redis_gia
+PASSED tests/test_cp4.py::TestStateless::test_state_khong_nam_trong_process
+PASSED tests/test_cp4.py::TestStateless::test_khong_co_bien_toan_cuc_giu_state
+PASSED tests/test_cp4.py::TestStateless::test_lich_su_duoc_dung_lai_giua_cac_request
+PASSED tests/test_cp4.py::TestReadiness::test_ready_tra_200_khi_redis_song
+PASSED tests/test_cp4.py::TestReadiness::test_ready_tra_503_khi_redis_chet
+PASSED tests/test_cp4.py::TestReadiness::test_ready_khac_health
+PASSED tests/test_cp4.py::TestGracefulShutdown::test_nhan_tin_hieu_thi_bat_co
+PASSED tests/test_cp4.py::TestGracefulShutdown::test_dang_ky_handler_cho_sigterm_va_sigint
+PASSED tests/test_cp4.py::TestGracefulShutdown::test_nhuong_lai_cho_handler_cu
+PASSED tests/test_cp4.py::TestGracefulShutdown::test_health_bao_503_khi_dang_tat
+PASSED tests/test_cp4.py::TestGracefulShutdown::test_ready_bao_503_khi_dang_tat
+SKIPPED [1] tests/test_cp2.py:193: Docker chưa chạy — bỏ qua
+SKIPPED [1] tests/test_cp2.py:203: Docker chưa chạy — bỏ qua
+68 passed, 2 skipped, 1 warning in 0.84s
