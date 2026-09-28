@@ -62,10 +62,10 @@ Lần khởi động đầu, Deploy Logs báo `ValidationError: 1 validation err
 
 Khi kết nối GitHub ban đầu, Railway App bị yêu cầu cài vào tổ chức lớp không có quyền quản trị. Đã chọn tài khoản cá nhân thuyannie2310 và chỉ cấp quyền repo bài lab.
 
-## Bằng chứng còn cần lưu
+## Ảnh minh chứng
 
-- screenshots/dashboard.png: dashboard Railway có app và Redis Online.
-- screenshots/health.png: trang /health của URL cloud (ảnh local cũ nên giữ tên riêng).
+- [screenshots/dashboard.png](screenshots/dashboard.png): đã chụp lại ngày 2026-09-28, app và Redis đều Online.
+- Ảnh `/health` cloud còn thiếu: lần chụp lại ngày 2026-09-28, Chrome báo `ERR_BLOCKED_BY_CLIENT` cả sau khi tải lại. Đây là lỗi truy cập phía trình duyệt; kết quả HTTP kiểm tra trước đó được ghi ở trên.
 - screenshots/scale-history.png: đã lưu thí nghiệm Docker local 3 agent.
 
 Không dùng LOCAL_FALLBACK cho bản deploy này.

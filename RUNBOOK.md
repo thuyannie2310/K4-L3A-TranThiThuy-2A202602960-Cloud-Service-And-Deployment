@@ -53,7 +53,7 @@ Nginx giữ cổng 8000; các agent chỉ dùng cổng nội bộ. Override cầ
 
 - Đã điền đủ 10 câu trong exercises.md từ code và quan sát thực tế.
 - Đã điền URL, cấu hình, kết quả và lỗi triển khai trong DEPLOYMENT.md.
-- Còn bổ sung ảnh dashboard Railway và /health cloud vào screenshots/.
+- Đã lưu ảnh dashboard Railway tại screenshots/dashboard.png; còn ảnh /health cloud vì Chrome báo ERR_BLOCKED_BY_CLIENT khi chụp lại.
 - Kiểm tra tên repo theo mẫu có DAY12 và CloudServicesAndDeployment, MSSV, rồi nộp liên kết repo lên Codelab.
 - Bonus CI/CD chưa thực hiện; lần chấm dùng --no-bonus.
 
