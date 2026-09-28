@@ -55,10 +55,22 @@ Nginx giữ cổng 8000; các agent chỉ dùng cổng nội bộ. Override cầ
 - Đã điền URL, cấu hình, kết quả và lỗi triển khai trong DEPLOYMENT.md.
 - Đã lưu ảnh dashboard Railway tại screenshots/dashboard.png; còn ảnh /health cloud vì Chrome báo ERR_BLOCKED_BY_CLIENT khi chụp lại.
 - Kiểm tra tên repo theo mẫu có DAY12 và CloudServicesAndDeployment, MSSV, rồi nộp liên kết repo lên Codelab.
-- Bonus CI/CD chưa thực hiện; lần chấm dùng --no-bonus.
+- Bonus CI/CD đã viết tại `.github/workflows/ci.yml`; cần cấu hình secret và xác minh lần chạy thực tế trước khi tính hoàn thành. Lần chấm 100/100 trước đó dùng --no-bonus.
 
 ## Giới hạn của thiết kế lab
 
 - X-User-Id do client gửi, không phải danh tính đã được xác minh riêng; không phù hợp để phân quyền/billing thật chỉ bằng header này.
 - Cost guard kiểm tra tổng đã chi rồi ghi nhận sau lượt gọi; không reserve ngân sách cho request đang chạy.
 - FakeRedis chỉ phục vụ kiểm thử/local, không dùng để scale nhiều process hoặc deploy cloud.
+
+## Bonus CI/CD
+
+Workflow chạy khi push/PR vào main, hoặc Run workflow thủ công. Job test chạy CP1–CP4 và regression; job build build Docker thật và kiểm tra dung lượng. Deploy chỉ chạy trên main sau khi cả hai job pass. Không chạy CP5 hoặc test badge trong CI vì phụ thuộc bản deploy/trạng thái workflow.
+
+Cấu hình một lần:
+1. Railway → project supportive-tranquility → Settings → Tokens: tạo project token cho production.
+2. GitHub repo → Settings → Secrets and variables → Actions: thêm secret `RAILWAY_TOKEN` bằng token đó. Không dùng AGENT_API_KEY thay thế.
+3. Giữ Railway auto deploy tắt để không vượt qua cổng kiểm tra GitHub Actions.
+4. Actions → CI/CD → Run workflow trên main. Xác minh test, build, deploy đều xanh, rồi chạy `python -m pytest tests/test_bonus_cicd.py -v`.
+
+Token project chỉ phục vụ môi trường đã chọn; xem [Railway CLI deployment](https://docs.railway.com/cli/deploying). Workflow dừng với lỗi rõ ràng nếu chưa có token. Chưa có bằng chứng deploy CI thành công thì chưa coi bonus hoàn tất.

@@ -1,0 +1,92 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run checkpoints and regression tests
+        env:
+          AGENT_API_KEY: ci-dummy
+          REDIS_URL: fake://
+        run: python -m pytest tests/ -v -m "not docker" --ignore=tests/test_cp5.py --ignore=tests/test_bonus_cicd.py
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - name: Build Docker image and verify image size
+        run: |
+          docker build -t agent:ci .
+          python -m pytest tests/test_cp2.py -v -m docker
+
+  deploy:
+    needs: [test, build]
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      PUBLIC_URL: https://k4-l3a-tranthithuy-2a202602960-cloud-service-and-production.up.railway.app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require deployment token
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo '::error::Add the production project token as the RAILWAY_TOKEN repository secret.'
+            exit 1
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned Railway CLI
+        run: npm install --global @railway/cli@5.62.1
+      - name: Deploy checked commit to Railway
+        run: railway up --project 000d262d-97c3-4364-94b5-ae0113df2a65 --service 0c2c9e6e-8826-4d84-ad10-20321ae01484 --environment production --ci
+      - name: Check health and Redis readiness
+        run: |
+          python - <<'PY'
+          import json, os, time, urllib.request
+          for attempt in range(30):
+              try:
+                  def get(path):
+                      with urllib.request.urlopen(os.environ['PUBLIC_URL'] + path, timeout=10) as response:
+                          return json.load(response)
+                  assert get('/health')['status'] == 'ok'
+                  ready = get('/ready')
+                  assert ready['status'] == 'ready' and ready['redis'] is True
+                  print('Cloud health and Redis readiness passed.')
+                  break
+              except Exception as error:
+                  if attempt == 29:
+                      raise
+                  print(f'Waiting for readiness: {type(error).__name__}')
+                  time.sleep(10)
+          PY
